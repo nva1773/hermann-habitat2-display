@@ -1,0 +1,14 @@
+wait 100 ms
+00
+wait 1700 ms
+AA 55 00 00 1E 00 02 04
+wait 25 ms
+AA 55 00 00 1E 00 02 04
+wait 25 ms
+AA 55 00 00 1E 00 02 04
+wait 25 ms
+AA 55 FF 00 1E 00 00 00
+wait 25 ms
+AA 55 FF 00 1E 00 00 00
+wait 25 ms
+AA 55 FF 00 1E 00 00 00
