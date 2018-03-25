@@ -16,7 +16,7 @@
 
 Устройство предназначенно для отображения информации о состоянии газового котла **Habitat 2** фирмы **Hermann**.
 
-![Внешний вид](https://github.com/nva1773/hermann-hobitat2-display/blob/master/Doc/Foto%20device.jpg)
+![Внешний вид](https://github.com/nva1773/hermann-habitat2-display/blob/master/Doc/Foto%20device.jpg)
 
 Основная плата котла и модуль дисплея обмениваются данными в одностороннем порядке по последовательному порту.
 Скорость обмена 2400 бод, длина посылки 8 байт. Пауза между посылками состовляет примерно 25мс.
@@ -27,7 +27,7 @@
 - Цифровой осциллограф SIGLENT SDS1072CML.
 
 Для отображения информации был применен LCD с нерабочей платы газового котла **EOLO NIKE** фирмы **IMMERGAS**. Т.к. техническая информация по данному дисплею отсутствовала, то предворительно была проделанна работа по определению расспиновки 
-[LCD](https://github.com/nva1773/hermann-hobitat2-display/blob/master/Doc/LCD%20Immergas.pdf)
+[LCD](https://github.com/nva1773/hermann-habitat2-display/blob/master/Doc/LCD%20Immergas.pdf)
 
 Для обработки данных и выдачи их на дисплей применнен микропроцессор фирмы **Microchip** PIC18F242. 
 Программа написанна на Си в среде **MPLAB IDE** и скомпелированна с помощью **MPLAB C18**.
