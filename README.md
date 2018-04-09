@@ -21,7 +21,7 @@
 
 Схему нарисовал в программе **Proteus**, что дало возможность отладки без создания реального устройства.
 
-[circuit](https://github.com/nva1773/hermann-habitat2-display/blob/led/Hard/circuit.jpg)
+![circuit](https://github.com/nva1773/hermann-habitat2-display/blob/led/Hard/circuit.jpg)
 
 > Дисплей расположил зеркально, чтобы точки были вверху. Это дало возможность отображать режимы работы газового котла.
 
