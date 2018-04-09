@@ -35,3 +35,6 @@
 ***
 Добавлена новая ветка. Изменен тип микроконтроллера и в место специфического LCD применил светодиодный цифровой дисплей: 
 [branch led](https://github.com/nva1773/hermann-habitat2-display/tree/led)
+
+В результате получилось две версии устройства: [releases](https://github.com/nva1773/hermann-habitat2-display/releases)
+
