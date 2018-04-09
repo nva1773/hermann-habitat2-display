@@ -10,7 +10,6 @@
 #define mDisableInterrupt()		INTCONbits.GIEH = 0; INTCONbits.GIEL = 0;
 
 /** P R O T O T Y P E S ******************************************************/
-void isrLow(void);
 void isrHigh(void);
 
 #endif //INTERRUPT_H

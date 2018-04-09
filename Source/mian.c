@@ -1,11 +1,10 @@
-// Display for Hermann Hobitat2 on PIC18F242 used 8MHz external rezonator
-// - Timer0 initialization on 500Hz used interupt low
-// - LCD with IMMERGAS EOLO NIKE (3COM õ 8SEG = 24 symbol)
-// - UART recivie data used interrupt high
-//	 recivie first byte - responce Log1 duration 3.21ms,
+// Display for Herman Hobitat2 on PIC18F1220 used 8MHz internal rezonator
+// - Timer0 initialization on 500Hz used interupt
+// - LED (2COM õ 7SEG = Common Anode)
+// - UART recivie data used interrupt
 //   recive frame 8 bytes, pause 25ms.
 /** I N C L U D E S **********************************************************/
-#include <p18f242.h>
+#include <p18f1220.h>
 #include <delays.h>
 #include "system\typedefs.h"
 #include "system\cpucfg.h"			// IO configuration
@@ -13,11 +12,10 @@
 #include "user\user.h"				// User function
 
 /** C O N F I G U R A T I O N   B I T S **************************************/ 
-#pragma config OSC = HS, OSCS = OFF
+#pragma config OSC = INTIO2
 #pragma config PWRT = ON
 #pragma config BOR = ON, BORV = 42
-#pragma config WDT = OFF
-#pragma config CCP2MUX = ON
+#pragma config WDT = OFF, MCLRE=OFF
 #pragma config LVP = OFF
 #pragma config CP0 = OFF
 #pragma config CP1 = OFF
@@ -35,9 +33,9 @@ byte ReceiveNum;
  *****************************************************************************/
 void main(void)
 {
-	// Reset ports - all inputs, delay 70ms 
+	// OSC - internal 8MHz, Reset ports - all inputs, delay 70ms 
+	mInitOSC();
 	mResetPorts();
-	mInitTransmit();
 	Delay1KTCYx(140);//70ms
 		
 	// Init CPU and Variable
@@ -52,17 +50,23 @@ void main(void)
 			mDisableInterrupt();
 			//
 			fReceiveSuccess = false;
+   			mWriteUSART(chReceive);
+   			mWriteUSART(chSpace);
 			ServiceUART();			
 			//
 			mEnableInterrupt();
 		}
 		
-		// Update LCD
-		if(fUpdateLCD)
+		// Update LED
+		if(fUpdateLED)
 		{
-			fUpdateLCD = false;
+			mDisableInterrupt();
+			//
+			fUpdateLED = false;
 			ServiceFlash();
-			UpdateLCD();
+			UpdateLED();
+			//
+			mEnableInterrupt();
 		}
 	}//end while
 }
@@ -73,18 +77,19 @@ void main(void)
 void Initialize(void)
 {
  // Interrupt -  See interrupt.h
-    mPriorityInterrupt(TRUE);		
+    mPriorityInterrupt(false); // Used as PIC16CXXX
     // Flags
     Flags.bits = 0;
-    // Ports - See cpucfg.h
-    mInitLCD();
-    mInitLinkLED();
+    // Display LED - See cpucfg.h
+    mInitDisplay();
     // Timer0
     mInitTimer0();
     mLoadTimer0();//-> 2 ms
 	mStartTimer0();
 	// UART
-   	mInitReceive();
+   	mInitUART();
+   	mWriteUSART(chStart);
+   	mWriteUSART(chSpace);
 	// Variable
     InitValue();
     // Enagle interrupt

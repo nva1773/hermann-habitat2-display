@@ -24,13 +24,6 @@ void interrupt_high_vector(void)
 }
 #pragma code
 
-#pragma code low_vector=0x18
-void interrupt_low_vector(void)
-{
-    _asm goto isrLow _endasm
-}
-#pragma code
-
 /** D E C L A R A T I O N S **************************************************/
 /******************************************************************************
  * Function:        void isrHigh(void)
@@ -39,69 +32,49 @@ void interrupt_low_vector(void)
 void isrHigh(void)
 {
 	unsigned char temp;
+	
 	// UART Receive Interrupt
 	if(mInterruptReceive)
 	{
 		mFlagReceive = false;
-		temp = RCREG;
+		temp = mReadUSART();
 		TimeOut = 0;
-		mLinkLED = TRUE;
-		//
+		// First byte
 		if(!fReceiveStart)
 		{
-				fReceiveStart = true;
-				mTransmit = TRUE;
-				mStopTimer0();
-				mTransmitTimer0();//-> 3.21 ms
-				mStartTimer0();
+			fReceiveStart = true;
+			// used function
 		}
-		else if(ReceiveNum < MAX_NUM_RECEIVE)
+		// Next byte
+		if(ReceiveNum < MAX_NUM_RECEIVE)
 		{
 			DataReceive[ReceiveNum] = temp;
 			ReceiveNum++;
 			fReceiveNext = true;
 		}
 	}//end receive
-}
-#pragma code
-
-/******************************************************************************
- * Function:        void isrLow(void)
- *****************************************************************************/
-#pragma interruptlow isrLow
-void isrLow(void)
-{
-	// Timer0 - 3,21ms for UART or 2ms for LCD and Key
+	
+	// Timer0 - 2ms for LED
 	if(mInterruptTimer0)
 	{
 		mLoadTimer0();
 		// Receive data
-		mDisableInterrupt();
-		if(fReceiveStart)
+		if(fReceiveStart && fReceiveNext)
 		{
-			if(mTransmit)
+			TimeOut++; // == 14ms
+			if(TimeOut == 7)
 			{
-				mTransmit = FALSE;
-				mLinkLED = FALSE;
+				fReceiveNext = false;
+				TimeOut = 0;
+				if(ReceiveNum == MAX_NUM_RECEIVE)
+					fReceiveSuccess = true;
+				else
+					ClearData();
 				ReceiveNum = 0;
-				ClearLCD();
-			}
-			else if(fReceiveNext)
-			{
-				TimeOut++;
-				if(TimeOut == 7)
-				{
-					fReceiveNext = false;
-					if(ReceiveNum == MAX_NUM_RECEIVE) fReceiveSuccess = true;
-					ReceiveNum = 0;
-					TimeOut = 0;
-					mLinkLED = FALSE;
-				}
 			}
 		}
-		mEnableInterrupt();
-		// Update LCD
-		fUpdateLCD = true;
+		// Update LED
+		fUpdateLED = true;
 	}// end Timer0
 }
 #pragma code
